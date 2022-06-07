@@ -6,6 +6,13 @@ import passport from "passport";
 //Database Model
 import { OrderModel } from "../../database/allModels";
 
+//Validation
+import {
+  ValidateOrderId,
+  ValidateNewOrderId,
+  ValidateOrderDetails,
+} from "../../Validation/order";
+
 const Router = express.Router();
 
 // Route           /
@@ -14,18 +21,24 @@ const Router = express.Router();
 // Access          Public
 // Methode         GET
 
-Router.get("/:id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const getOrder = await OrderModel.findOne({ user: _id });
-    if (!getOrder) {
-      return res.status(404).json({ error: "User not found" });
+Router.get(
+  "/:id",
+  passport.authenticate("jwt"),
+  { session: false },
+  async (req, res) => {
+    try {
+      await ValidateOrderId(req.params);
+      const { _id } = req.params;
+      const getOrder = await OrderModel.findOne({ user: _id });
+      if (!getOrder) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      return res.status(200).json({ orders: getOrder });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
-    return res.status(200).json({ orders: getOrder });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
   }
-});
+);
 
 // Route           /new
 // Descriptions    add new order
@@ -35,6 +48,8 @@ Router.get("/:id", async (req, res) => {
 
 Router.post("/new/:_id", async (req, res) => {
   try {
+    await ValidateNewOrderId(req.params);
+    await ValidateOrderDetails(req.body);
     const { _id } = req.params;
     const { orderDetails } = req.body;
     const addNewOrder = await OrderModel.findOneAndUpdate(
@@ -53,6 +68,5 @@ Router.post("/new/:_id", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
 
 export default Router;
