@@ -21,12 +21,12 @@ const DeliverySmCard = ({image,title}) => {
 
 const DeliveryLgCard = ({image,title}) => {
     return (<>
-        <div className="hidden lg:block shadow w-64 h-48">
+        <div className="hidden lg:block shadow w-60 h-48">
           <div className="w-full h-full">
             <img
               src={image}
               alt="food"
-              className="w-full h-full object-cover rounded-md shadow-lg"
+              className="w-full h-full rounded-md shadow-lg"
             />
           </div>
           <div>

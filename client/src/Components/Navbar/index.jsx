@@ -29,7 +29,7 @@ const NavbarSm = () => {
 const NavbarLg = () => {
   return (
     <>
-      <div className="hidden container px-36 mx-auto lg:inline">
+      <div className="hidden container px-48 mx-auto lg:inline">
         <div className="gap-4 w-full items-center justify-content lg:flex">
           <div className="w-28">
             <img
